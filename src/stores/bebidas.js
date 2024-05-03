@@ -1,8 +1,11 @@
 import { ref, onMounted, reactive } from "vue";
 import { defineStore } from "pinia";
 import ApiServices from "../services/ApiServices";
+import { useModalStore } from "./modal.js";
 
 export const useBebidasStore = defineStore("bebidas", () => {
+    const modal = useModalStore();
+
     const categorias = ref([]);
 
     const busqueda = reactive({
@@ -11,6 +14,8 @@ export const useBebidasStore = defineStore("bebidas", () => {
     });
 
     const recetas = ref([]);
+
+    const receta = ref({});
 
     onMounted(async () => {
         const {
@@ -33,7 +38,9 @@ export const useBebidasStore = defineStore("bebidas", () => {
         const {
             data: { drinks },
         } = await ApiServices.buscarReceta(id);
-        console.log(drinks[0]);
+        receta.value = drinks[0];
+
+        modal.handleClickModal();
     };
 
     return {
@@ -42,5 +49,6 @@ export const useBebidasStore = defineStore("bebidas", () => {
         obtenerRecetas,
         recetas,
         seleccionarBebida,
+        receta
     };
 });

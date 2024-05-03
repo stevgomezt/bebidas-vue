@@ -39,3 +39,5 @@ archivo main.css:
 @tailwind utilities;
 
 npm i axios
+
+npm i @headlessui/vue
