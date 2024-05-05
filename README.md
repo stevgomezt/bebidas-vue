@@ -41,3 +41,5 @@ archivo main.css:
 npm i axios
 
 npm i @headlessui/vue
+
+ npm i @heroicons/vue

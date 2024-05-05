@@ -1,9 +1,12 @@
-import { ref, watch, onMounted } from "vue";
+import { ref, watch, onMounted, computed } from "vue";
 import { defineStore } from "pinia";
 import { useBebidasStore } from "./bebidas";
+import { useModalStore } from "./modal";
 
 export const useFavoritosStore = defineStore("favoritos", () => {
     const bebidas = useBebidasStore();
+
+    const modal = useModalStore();
 
     const favoritos = ref([]);
 
@@ -25,26 +28,41 @@ export const useFavoritosStore = defineStore("favoritos", () => {
         localStorage.setItem("favoritos", JSON.stringify(favoritos.value));
     };
 
-    const existeFavorito = (id) => {
+    const existeFavorito = () => {
         const favoritosLocalStorage =
             JSON.parse(localStorage.getItem("favoritos")) ?? [];
         return favoritosLocalStorage.some(
-            (favorito) => favorito.idDrink === id
+            (favorito) => favorito.idDrink === bebidas.receta.idDrink
         );
+    };
+
+    const eliminarFavorito = () => {
+        favoritos.value = favoritos.value.filter(
+            (favorito) => favorito.idDrink !== bebidas.receta.idDrink
+        );
+    };
+
+    const agregarFavorito = () => {
+        favoritos.value.push(bebidas.receta);
     };
 
     const handleClickFavorito = () => {
         // console.log(bebidas.receta);
-        if (existeFavorito(bebidas.receta.idDrink)) {
-            console.log("Ya existe...");
+        if (existeFavorito()) {
+            // console.log("Ya existe...");
+            eliminarFavorito();
         } else {
-            favoritos.value.push(bebidas.receta);
+            agregarFavorito();
         }
+        modal.modal = false;
     };
+
+    const noFavoritos = computed(() => favoritos.value.length === 0);
 
     return {
         favoritos,
         handleClickFavorito,
         existeFavorito,
+        noFavoritos,
     };
 });
