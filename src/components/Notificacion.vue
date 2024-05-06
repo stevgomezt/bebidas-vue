@@ -2,12 +2,9 @@
 import { ref } from "vue";
 import { CheckCircleIcon, XCircleIcon } from "@heroicons/vue/24/outline";
 import { XMarkIcon } from "@heroicons/vue/20/solid";
+import { useNotificacionStore } from "../stores/notificaciones.js";
 
-const show = ref(false);
-
-setTimeout(() => {
-    show.value = true;
-}, 3000);
+const notificaciones = useNotificacionStore();
 </script>
 
 <template>
@@ -25,31 +22,37 @@ setTimeout(() => {
                 leave-to-class="opacity-0"
             >
                 <div
-                    v-if="show"
+                    v-if="notificaciones.mostrar"
                     class="pointer-events-auto w-full max-w-sm overflow-hidden rounded-lg bg-white shadow-lg ring-1 ring-black ring-opacity-5"
                 >
                     <div class="p-4">
                         <div class="flex items-start">
                             <div class="flex-shrink-0">
-                                <CheckCircleIcon
-                                    class="h-6 w-6 text-green-400"
-                                    aria-hidden="true"
-                                />
                                 <XCircleIcon
                                     class="h-6 w-6 text-red-400"
                                     aria-hidden="true"
+                                    v-if="notificaciones.error"
+                                />
+                                <CheckCircleIcon
+                                    class="h-6 w-6 text-green-400"
+                                    aria-hidden="true"
+                                    v-else
                                 />
                             </div>
                             <div class="ml-3 w-0 flex-1 pt-0.5">
                                 <p
-                                    class="text-sm font-medium text-gray-900"
-                                ></p>
-                                <p class="mt-1 text-sm text-gray-500"></p>
+                                    class="text-sm font-medium text-gray-900 uppercase"
+                                >
+                                    Notificacion
+                                </p>
+                                <p class="mt-1 text-sm text-gray-500">
+                                    {{ notificaciones.texto }}
+                                </p>
                             </div>
                             <div class="ml-4 flex flex-shrink-0">
                                 <button
                                     type="button"
-                                    @click="show = false"
+                                    @click="notificaciones.mostrar = false"
                                     class="inline-flex rounded-md bg-white text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                                 >
                                     <span class="sr-only">Close</span>

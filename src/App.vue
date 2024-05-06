@@ -13,7 +13,7 @@ import Notificacion from "./components/Notificacion.vue";
     </main>
 
     <Modal />
-    <Notificacion/>
+    <Notificacion />
 </template>
 
 <style scoped></style>
